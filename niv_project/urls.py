@@ -16,33 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-import sqlite3
 from pathlib import Path
 from django.shortcuts import render
+from materias.models import Materia  # ✅ CORRECTO
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-def crear_tabla():
-    """Crea la tabla de materias si no existe"""
-    ruta_db = BASE_DIR / 'db.sqlite3'
-    conn = sqlite3.connect(ruta_db)
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS materias (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL,
-            semestre INTEGER NOT NULL,
-            profesor TEXT NOT NULL,
-            comentarios TEXT,
-            fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    conn.commit()
-    conn.close()
-
 def index(request):
-    """Página principal con formulario y lista"""
-    crear_tabla()
     
     # Si el usuario envía el formulario
     if request.method == 'POST':
@@ -52,38 +32,16 @@ def index(request):
         comentarios = request.POST.get('comentarios', '').strip()
         
         if nombre and semestre and profesor:
-            conn = sqlite3.connect(BASE_DIR / 'db.sqlite3')
-            cursor = conn.cursor()
-            cursor.execute('''
-                INSERT INTO materias (nombre, semestre, profesor, comentarios)
-                VALUES (?, ?, ?, ?)
-            ''', (nombre, semestre, profesor, comentarios))
-            conn.commit()
-            conn.close()
+            # Crear una nueva materia en la base de datos
+            Materia.objects.create(nombre=nombre, semestre=semestre, profesor=profesor, comentarios=comentarios)
     
     # Obtener todas las materias
-    conn = sqlite3.connect(BASE_DIR / 'db.sqlite3')
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM materias ORDER BY fecha DESC')
-    materias_data = cursor.fetchall()
-    conn.close()
-    
-    # Convertir tuplas a diccionarios para mejor manejo en el template
-    materias = []
-    for materia in materias_data:
-        materias.append({
-            'id': materia[0],
-            'nombre': materia[1],
-            'semestre': materia[2],
-            'profesor': materia[3],
-            'comentarios': materia[4],
-            'fecha': materia[5]
-        })
+    materias = Materia.objects.all().order_by('-fecha')
     
     # Pasar datos al template
     context = {
         'materias': materias,
-        'materias_count': len(materias),
+        'materias_count': materias.count(),
         'semesters': range(1, 13)
     }
     
