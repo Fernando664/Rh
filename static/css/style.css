@@ -100,6 +100,27 @@ textarea {
     background: #f9f9f9;
 }
 
+/* ESTILOS PARA LOS SEMESTRES - AGREGADOS */
+.semestre-bajo {
+    color: #FFC107; /* Color amarillo */
+    font-weight: bold;
+    text-shadow: 0 0 1px rgba(0,0,0,0.1); /* Sombra sutil para mejor legibilidad */
+}
+
+.semestre-alto {
+    color: #000000; /* Color negro */
+}
+
+/* Para mantener el color específicamente en la celda del semestre */
+.tabla td.semestre-bajo,
+.tabla td.semestre-alto {
+    font-weight: inherit; /* Hereda el peso de la fuente, pero lo sobrescribimos en semestre-bajo */
+}
+
+.tabla td.semestre-bajo {
+    font-weight: bold; /* Solo los semestres bajos en negrita */
+}
+
 .error {
     color: #ff4444;
     font-size: 14px;

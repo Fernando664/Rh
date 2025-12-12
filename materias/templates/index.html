@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Materias</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* Agrega esto si no quieres modificar tu archivo CSS externo */
+        .semestre-bajo {
+            color: #FFC107; /* Color amarillo */
+            font-weight: bold;
+        }
+        .semestre-alto {
+            color: #000000; /* Color negro */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -65,7 +75,9 @@
                     {% for materia in materias %}
                         <tr>
                             <td>{{ materia.nombre }}</td>
-                            <td>{{ materia.semestre }}°</td>
+                            <td class="{% if materia.semestre <= 5 %}semestre-bajo{% else %}semestre-alto{% endif %}">
+                                {{ materia.semestre }}°
+                            </td>
                             <td>{{ materia.profesor }}</td>
                             <td>{{ materia.comentarios|default:"-" }}</td>
                             <td>{{ materia.fecha|date:"d/m/Y H:i" }}</td>
