@@ -120,7 +120,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Para producción
 STATICFILES_DIRS = [
-    BASE_DIR / 'mi_proyecto' / 'static',  # Para desarrollo
+    BASE_DIR / 'static',
 ]
 
 # Default primary key field type
